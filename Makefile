@@ -22,7 +22,7 @@ fmt:
 	go fmt ./...
 
 .PHONY: build
-build: deps fmt $(bin)
+build: fmt $(bin)
 
 $(bin):
 	go build
