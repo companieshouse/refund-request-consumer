@@ -68,8 +68,7 @@ func getRetryService(cfg *config.Config) (*service.Service, error) {
 
 	retrySvc, err := service.New(cfg.ConsumerTopic, cfg.ConsumerGroupName, cfg.RetryTopicOffset, cfg, retry)
 	if err != nil {
-		log.Error(fmt.Errorf("error initialising retry consumer service: %s", err))
-		return nil, err
+		return nil, fmt.Errorf("error initialising retry consumer service: %w", err)
 	}
 
 	return retrySvc, nil

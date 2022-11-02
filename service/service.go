@@ -1,3 +1,4 @@
+// Package service contains the controllers to consume and process kafka messages.
 package service
 
 import (
@@ -19,7 +20,7 @@ import (
 	"github.com/davecgh/go-spew/spew"
 )
 
-// Service represents service config for refund-request-consumer
+// Service represents service config for refund-request-consumer.
 type Service struct {
 	Consumer            *consumer.GroupConsumer
 	Producer            *producer.Producer
@@ -35,15 +36,16 @@ type Service struct {
 }
 
 // New creates a new instance of service with a given consumerGroup name,
-// consumerTopic, throttleRate and refund-request-consumer config
+// consumerTopic, throttleRate and refund-request-consumer config.
 func New(consumerTopic, consumerGroupName string, InitialOffset int64, cfg *config.Config, retry *resilience.ServiceRetry) (*Service, error) {
 
 	schemaName := "refund-request"
 	refundRequestSchema, err := schema.Get(cfg.SchemaRegistryURL, schemaName)
 	if err != nil {
-		log.Error(fmt.Errorf("error receiving %s schema: %w", schemaName, err))
+		e := fmt.Errorf("error receiving %s schema: %w", schemaName, err)
+		log.Error(e)
 
-		return nil, err
+		return nil, e
 	}
 
 	log.Info(fmt.Sprintf("Successfully received %s schema", schemaName))
@@ -157,13 +159,10 @@ func (svc *Service) Start(wg *sync.WaitGroup, c chan os.Signal) {
 			// Falls into this block when a message becomes available from consumer
 			if message != nil {
 				if message.Offset >= svc.InitialOffset {
-
 					var rr data.RefundRequest
 					refundRequestSchema := &avro.Schema{
 						Definition: svc.RefundRequestSchema,
 					}
-					//spew.Dump(message.Value)
-					//fmt.Println(message.Value)
 
 					err = refundRequestSchema.Unmarshal(message.Value, &rr)
 					if err != nil {
@@ -213,14 +212,14 @@ func (svc *Service) Shutdown() {
 	log.Info("Closing producer")
 	err := svc.Producer.Close()
 	if err != nil {
-		log.Error(fmt.Errorf("error closing producer: %s", err))
+		log.Error(fmt.Errorf("error closing producer: %w", err))
 	}
 	log.Info("Producer successfully closed")
 
 	log.Info("Closing consumer")
 	err = svc.Consumer.Close()
 	if err != nil {
-		log.Error(fmt.Errorf("error closing consumer: %s", err))
+		log.Error(fmt.Errorf("error closing consumer: %w", err))
 	}
 	log.Info("Consumer successfully closed")
 }
