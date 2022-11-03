@@ -33,4 +33,4 @@ IFS=',' read -ra BROKERS <<< "${KAFKA_BROKER_ADDR}"
 # Ensure we only populate the broker address via application arguments
 unset KAFKA_BROKER_ADDR
 
-exec "${APP_DIR}/refund-request-consumer" "-bind-addr=:${PORT}" $(for broker in "${BROKERS[@]}"; do echo -n "-broker-addr=${broker} "; done)
+exec "${APP_DIR}/refund-request-consumer" $(for broker in "${BROKERS[@]}"; do echo -n "-broker-addr=${broker} "; done)
