@@ -3,7 +3,10 @@ package service
 
 import (
 	"fmt"
+	"net/http"
 	"os"
+	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -17,7 +20,7 @@ import (
 	"github.com/companieshouse/chs.go/log"
 	"github.com/companieshouse/refund-request-consumer/config"
 	"github.com/companieshouse/refund-request-consumer/data"
-	"github.com/davecgh/go-spew/spew"
+	"github.com/companieshouse/refund-request-consumer/payment"
 )
 
 // Service represents service config for refund-request-consumer.
@@ -31,8 +34,10 @@ type Service struct {
 	Retry               *resilience.ServiceRetry
 	IsErrorConsumer     bool
 	BrokerAddr          []string
-	//	    Client          *http.Client
-	//		ApiKey          string
+	Payments            payment.Payments
+	PaymentsAPIURL      string
+	Client              *http.Client
+	ApiKey              string
 }
 
 // New creates a new instance of service with a given consumerGroup name,
@@ -99,17 +104,17 @@ func New(consumerTopic, consumerGroupName string, InitialOffset int64, cfg *conf
 	}
 
 	return &Service{
-		Consumer: c,
-
+		Consumer:            c,
 		RefundRequestSchema: refundRequestSchema,
 		HandleError:         rh.HandleError,
 		Topic:               topicName,
 		Retry:               retry,
 		IsErrorConsumer:     cfg.IsErrorConsumer,
 		BrokerAddr:          cfg.BrokerAddr,
-		//		Client:              &http.Client{},
-		//		ApiKey:              cfg.ChsAPIKey,
-		//		PaymentsAPIURL:      cfg.PaymentsAPIURL,
+		Payments:            payment.New(),
+		PaymentsAPIURL:      cfg.PaymentsAPIURL,
+		Client:              &http.Client{},
+		ApiKey:              cfg.ChsAPIKey,
 	}, nil
 }
 
@@ -175,8 +180,26 @@ func (svc *Service) Start(wg *sync.WaitGroup, c chan os.Signal) {
 						continue
 					}
 
-					// TODO ROE-1461 Call Payments API
-					spew.Dump(rr) // TODO remove this temporary logging
+					refundRequestURL := fmt.Sprintf("%s/payments/%s/refunds", svc.PaymentsAPIURL, rr.PaymentID)
+
+					amount, err := convertDecimalAmountToPence(rr.RefundAmount)
+					if err != nil {
+						log.Error(fmt.Errorf("error converting amount: %w", err))
+						continue
+					}
+					refundPostRequest := data.RefundPostRequest{
+						Amount:          amount,
+						RefundReference: rr.RefundReference,
+					}
+					err = svc.Payments.RefundRequestPost(refundRequestURL, refundPostRequest, svc.Client, svc.ApiKey)
+					if err != nil {
+						log.Error(err, log.Data{"message_offset": message.Offset})
+						handleErr := svc.HandleError(err, message.Offset, &rr)
+						if handleErr != nil {
+							log.Error(fmt.Errorf("error handling error: %w", handleErr))
+						}
+						continue
+					}
 				}
 			}
 
@@ -204,6 +227,11 @@ func (svc *Service) Start(wg *sync.WaitGroup, c chan os.Signal) {
 
 	log.Info("Service successfully shutdown")
 
+}
+
+func convertDecimalAmountToPence(amount string) (int, error) {
+	penceAmount := strings.Replace(amount, ".", "", 1)
+	return strconv.Atoi(penceAmount)
 }
 
 func (svc *Service) Shutdown() {
