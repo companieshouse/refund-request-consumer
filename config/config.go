@@ -23,8 +23,8 @@ type Config struct {
 	RetryThrottleRate      int         `env:"RETRY_THROTTLE_RATE_SECONDS"       flag:"retry-throttle-rate-seconds"       flagDesc:"Retry throttle rate seconds"`
 	MaxRetryAttempts       int         `env:"MAXIMUM_RETRY_ATTEMPTS"            flag:"max-retry-attempts"                flagDesc:"Maximum retry attempts"`
 	IsErrorConsumer        bool        `env:"IS_ERROR_QUEUE_CONSUMER"           flag:"is-error-queue-consumer"           flagDesc:"Set this flag if it is an error queue consumer"`
-	// PaymentsAPIURL         string      `env:"PAYMENTS_API_URL"                  flag:"payments-api-url"                  flagDesc:"Base URL for the Payment Service API"`
-	// ChsAPIKey              string      `env:"CHS_API_KEY"                       flag:"chs-api-key"                       flagDesc:"API access key"`
+	PaymentsAPIURL         string      `env:"PAYMENTS_API_URL"                  flag:"payments-api-url"                  flagDesc:"Base URL for the Payment Service API"`
+	ChsAPIKey              string      `env:"CHS_API_KEY"                       flag:"chs-api-key"                       flagDesc:"API access key"`
 }
 
 // Namespace implements service.Config.Namespace.
