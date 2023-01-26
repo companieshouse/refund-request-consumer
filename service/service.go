@@ -71,7 +71,7 @@ func New(consumerTopic, consumerGroupName string, InitialOffset int64, cfg *conf
 	}
 
 	log.Info("Start Request Create resilient Kafka service", log.Data{"base_topic": consumerTopic, "app_name": appName, "maxRetries": maxRetries, "producer": p})
-	rh := resilience.NewHandler(consumerTopic, "consumer", retry, p, &avro.Schema{Definition: refundRequestSchema})
+	rh := resilience.NewHandler(consumerTopic, "refund-request-consumer", retry, p, &avro.Schema{Definition: refundRequestSchema})
 
 	// Work out what topic we're consuming from, depending on whether were processing resilience or error input
 	topicName := consumerTopic
