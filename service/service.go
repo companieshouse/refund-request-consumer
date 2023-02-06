@@ -180,6 +180,8 @@ func (svc *Service) Start(wg *sync.WaitGroup, c chan os.Signal) {
 						continue
 					}
 
+					log.Info(fmt.Sprintf("refund request received for Payment ID: [%s]", rr.PaymentID))
+
 					refundRequestURL := fmt.Sprintf("%s/payments/%s/refunds", svc.PaymentsAPIURL, rr.PaymentID)
 
 					amount, err := convertDecimalAmountToPence(rr.RefundAmount)
@@ -200,6 +202,7 @@ func (svc *Service) Start(wg *sync.WaitGroup, c chan os.Signal) {
 						}
 						continue
 					}
+					log.Info(fmt.Sprintf("refund request completed for Payment ID: [%s]", rr.PaymentID))
 				}
 			}
 
