@@ -1,6 +1,6 @@
 module github.com/companieshouse/refund-request-consumer
 
-go 1.23.7
+go 1.24.2
 
 require (
 	github.com/Shopify/sarama v1.24.0
