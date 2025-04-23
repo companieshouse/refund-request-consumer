@@ -7,6 +7,7 @@ require (
 	github.com/companieshouse/chs.go v1.2.12
 	github.com/companieshouse/gofigure v0.1.6
 	github.com/golang/mock v1.6.0
+	github.com/gorilla/pat v1.0.1
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/stretchr/testify v1.10.0
 )
@@ -22,6 +23,8 @@ require (
 	github.com/golang/snappy v1.0.0 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
+	github.com/gorilla/context v1.1.1 // indirect
+	github.com/gorilla/mux v1.7.3 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/hexira/go-ignore-cov v0.3.0 // indirect
 	github.com/jcmturner/gofork v1.7.6 // indirect
