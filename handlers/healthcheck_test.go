@@ -10,7 +10,7 @@ import (
 
 func TestUnitHealthCheck(t *testing.T) {
 	Convey("Check 200 Response for Healthcheck", t, func() {
-		req, err := http.NewRequest("GET", "/refubd-request-consumer/healthcheck", nil)
+		req, err := http.NewRequest("GET", "/refund-request-consumer/healthcheck", nil)
 		So(err, ShouldBeNil)
 		response := httptest.NewRecorder()
 

@@ -61,8 +61,8 @@ func main() {
 	router := pat.New()
 	handlers.Init(router)
 	go func() {
-		log.Info("Starting HTTP server on :" + "4081")
-		if err := http.ListenAndServe(":4081", router); err != nil {
+		log.Info("Starting HTTP server on :" + "8080")
+		if err := http.ListenAndServe(":8080", router); err != nil {
 			log.Error(fmt.Errorf("error starting HTTP server: %s", err), nil)
 		}
 	}()
