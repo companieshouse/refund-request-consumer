@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/pat"
 )
 
-func TestInit(t *testing.T) {
+func TestUnitInit(t *testing.T) {
 	r := pat.New()
 	Init(r)
 

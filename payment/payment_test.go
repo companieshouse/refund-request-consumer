@@ -15,18 +15,18 @@ var mockRefundPostRequest = data.RefundPostRequest{
 	RefundReference: "Test refund",
 }
 
-func TestInvalidPaymentAPIResponse_Error(t *testing.T) {
+func TestUnitInvalidPaymentAPIResponse_Error(t *testing.T) {
 	err := &InvalidPaymentAPIResponse{status: http.StatusBadRequest}
 	expected := "unexpected status returned from payments api: [400]"
 	assert.Equal(t, expected, err.Error())
 }
 
-func TestNew(t *testing.T) {
+func TestUnitNew(t *testing.T) {
 	payment := New()
 	assert.NotNil(t, payment)
 }
 
-func TestRefundRequestPost_Success(t *testing.T) {
+func TestUnitRefundRequestPost_Success(t *testing.T) {
 	payment := New()
 	mockClient := &http.Client{
 		Transport: roundTripFunc(func(req *http.Request) *http.Response {
@@ -40,7 +40,7 @@ func TestRefundRequestPost_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestRefundRequestPost_Failure(t *testing.T) {
+func TestUnitRefundRequestPost_Failure(t *testing.T) {
 	payment := New()
 	mockClient := &http.Client{
 		Transport: roundTripFunc(func(req *http.Request) *http.Response {
