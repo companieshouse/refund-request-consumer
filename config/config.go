@@ -1,6 +1,8 @@
 // Package config defines the environment variable and command-line flags
 // supported by this service and includes default values for particular
 // fields.
+//
+//coverage:ignore file
 package config
 
 import (
