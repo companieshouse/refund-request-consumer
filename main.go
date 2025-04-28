@@ -1,8 +1,10 @@
+//coverage:ignore file
 package main
 
 import (
 	"fmt"
 	goLog "log"
+	"net/http"
 	"os"
 	"os/signal"
 	"sync"
@@ -13,7 +15,9 @@ import (
 	"github.com/companieshouse/chs.go/kafka/resilience"
 	"github.com/companieshouse/chs.go/log"
 	"github.com/companieshouse/refund-request-consumer/config"
+	"github.com/companieshouse/refund-request-consumer/handlers"
 	"github.com/companieshouse/refund-request-consumer/service"
+	"github.com/gorilla/pat"
 )
 
 func main() {
@@ -53,6 +57,15 @@ func main() {
 
 	wg.Add(1)
 	go svc.Start(&wg, mainChannel)
+
+	router := pat.New()
+	handlers.Init(router)
+	go func() {
+		log.Info("Starting HTTP server on :" + "8080")
+		if err := http.ListenAndServe(":8080", router); err != nil {
+			log.Error(fmt.Errorf("error starting HTTP server: %s", err), nil)
+		}
+	}()
 
 	waitForServiceClose(&wg, mainChannel, retryChannel)
 
