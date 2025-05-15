@@ -118,5 +118,5 @@ variable "use_set_environment_files" {
 
 variable "refund_request_consumer_version" {
   type        = string
-  description = "The version of the filing-processed-tx-updater container to run."
+  description = "The version of the refund-request-consumer container to run."
 }
