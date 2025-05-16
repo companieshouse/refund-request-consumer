@@ -2,14 +2,14 @@
 # Common
 BIN          := refund-request-consumer
 SHELL		 :=	/bin/bash
-VERSION		 = unversioned
+VERSION		 ?= unversioned
 # Go
 CGO_ENABLED  = 1
 XUNIT_OUTPUT = test.xml
 LINT_OUTPUT  = lint.txt
 TESTS      	 = ./...
 COVERAGE_OUT = coverage.out
-GO111MODULE  = on
+GO111MODULE  = onf
 .PHONY:
 arch:
 	@echo OS: $(GOOS) ARCH: $(GOARCH)
