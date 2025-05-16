@@ -9,7 +9,7 @@ XUNIT_OUTPUT = test.xml
 LINT_OUTPUT  = lint.txt
 TESTS      	 = ./...
 COVERAGE_OUT = coverage.out
-GO111MODULE  = onf
+GO111MODULE  = on
 .PHONY:
 arch:
 	@echo OS: $(GOOS) ARCH: $(GOARCH)
