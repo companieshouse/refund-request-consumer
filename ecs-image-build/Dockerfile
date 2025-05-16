@@ -4,3 +4,4 @@ COPY /app .
 COPY docker_start.sh .
 RUN chmod +x docker_start.sh
 CMD ["./docker_start.sh"]
+
